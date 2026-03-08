@@ -11,12 +11,11 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python_version: '3.10'
+          python-version: '3.10'
 
       - name: Install System Dependencies
         run: |
           sudo apt update
-          # Nota: libtinfo5 dibuang kerana tidak lagi disokong dalam Ubuntu terbaru
           sudo apt install -y git zip unzip autoconf autotools-dev libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev build-essential python3-dev
           pip install --upgrade pip
           pip install --upgrade Cython==0.29.33 buildozer
