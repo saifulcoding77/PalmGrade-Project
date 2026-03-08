@@ -7,7 +7,7 @@ source.include_exts = py,png,jpg,kv,atlas
 version = 0.1
 
 # Keperluan Pustaka -opencv-python-headless adalah wajib untuk Android
-requirements = python3,kivy==2.2.1
+requirements = python3,kivy==2.2.1,numpy,opencv-python-headless
 
 orientation = portrait
 fullscreen = 0
@@ -27,5 +27,6 @@ android.archs = arm64-v8a
 p4a.branch = master
 android.accept_sdk_license = True
 android.skip_update = False
+
 
 
