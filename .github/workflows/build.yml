@@ -1,12 +1,9 @@
 name: Build APK
-on: 
-  push:
-    branches: [ main ]
-  workflow_dispatch:
+on: [push, workflow_dispatch]
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -25,9 +22,13 @@ jobs:
 
       - name: Build Android APK
         run: |
-          # Perintah 'yes' digunakan untuk menjawab 'y' secara automatik pada lesen Android
-          yes | buildozer -v android debug
-        
+          buildozer -v android debug
+        env:
+          # Cara rasmi untuk menerima lesen Android tanpa 'yes |'
+          APP_ANDROID_ACCEPT_SDK_LICENSE: "1"
+          # Memastikan Buildozer tahu ini adalah persekitaran CI
+          CI: "true"
+
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
