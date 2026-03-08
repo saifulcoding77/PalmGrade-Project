@@ -1,16 +1,14 @@
 name: Build APK
-on: [push, pull_request]
+on: 
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
-      - name: Get Date
-        id: get-date
-        run: |
-          echo "date=$(date +'%Y-%m-%d-%H;%M;%S')" >> $GITHUB_OUTPUT
 
       - name: Build with Buildozer
         uses: ArtemSudenko/buildozer-action@v1
@@ -21,5 +19,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
-          name: PalmGrade-APK-${{ steps.get-date.outputs.date }}
+          name: PalmGrade-APK
           path: bin/*.apk
