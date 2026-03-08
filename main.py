@@ -13,30 +13,34 @@ if platform == 'android':
 class PalmGradeApp(App):
     def build(self):
         self.root = BoxLayout(orientation='vertical')
-        
-        # 1. Tambah Label Status
-        self.status_label = Label(text="Memulakan Kamera...", size_hint_y=0.1)
+        self.status_label = Label(text="Sistem PalmGrade Dimulakan...", size_hint_y=0.1)
         self.root.add_widget(self.status_label)
-        
-        # 2. Cuba buka Kamera dengan Error Handling
-        try:
-            self.camera = Camera(play=True, resolution=(640, 480), index=0)
-            self.root.add_widget(self.camera)
-            self.status_label.text = "Kamera Aktif - Sedia untuk Analisis"
-        except Exception as e:
-            self.status_label.text = f"Ralat Kamera: {str(e)}"
-            
         return self.root
 
     def on_start(self):
         if platform == 'android':
-            request_permissions([Permission.CAMERA, Permission.WRITE_EXTERNAL_STORAGE])
-            # Beri masa 1 saat untuk sistem proses izin sebelum buka kamera
-            Clock.schedule_once(self.start_camera, 1)
+            # Minta izin secara rasmi
+            request_permissions([Permission.CAMERA], self.check_permissions)
+        else:
+            self.start_camera()
 
-    def start_camera(self, dt):
-        if hasattr(self, 'camera'):
-            self.camera.play = True
+    def check_permissions(self, permissions, results):
+        # Jika semua izin diberikan (results adalah list of booleans)
+        if all(results):
+            self.status_label.text = "Izin Diterima. Menghidupkan Kamera..."
+            # Tunggu 1.5 saat supaya sistem Android sedia
+            Clock.schedule_once(self.start_camera, 1.5)
+        else:
+            self.status_label.text = "Izin Kamera Ditolak!"
+
+    def start_camera(self, dt=0):
+        try:
+            # Resolusi rendah (320x240) untuk ujian kestabilan pada Vivo
+            self.camera = Camera(play=True, resolution=(320, 240), index=0)
+            self.root.add_widget(self.camera)
+            self.status_label.text = "Kamera Aktif (Vivo V21)"
+        except Exception as e:
+            self.status_label.text = f"Ralat: {str(e)}"
 
 if __name__ == '__main__':
     PalmGradeApp().run()
