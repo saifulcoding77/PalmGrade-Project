@@ -26,3 +26,4 @@ android.archs = arm64-v8a
 # 4. TAMBAH SETTING GRAFIK:
 android.allow_backup = True
 p4a.branch = master
+
