@@ -1,39 +1,27 @@
-name: Build APK
-on: [push, workflow_dispatch]
+[app]
+title = PalmGrade AI
+package.name = palmgradeai
+package.domain = org.palmgrade
+source.dir = .
+source.include_exts = py,png,jpg,kv,atlas
+version = 0.1
 
-jobs:
-  build:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+# REQUIREMENTS: Guna versi yang paling asas & stabil sahaja
+requirements = python3,kivy==2.2.1,android
 
-      - name: Setup Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+orientation = portrait
+fullscreen = 0
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
+# PERMISSIONS
+android.permissions = CAMERA
 
-      - name: Install System Dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y git zip unzip autoconf autotools-dev libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev build-essential python3-dev
-          pip install --upgrade pip
-          pip install --upgrade Cython==0.29.33 buildozer
-      - name: Build Android APK
-        run: |
-          buildozer -v android debug
-        env:
-          APP_ANDROID_ACCEPT_SDK_LICENSE: "1"
-          CI: "true"
+# SETTING VIVO V21 (64-bit)
+android.api = 33
+android.minapi = 21
+android.ndk = 25b
+android.archs = arm64-v8a
 
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: PalmGrade-APK-Result
-          path: bin/*.apk
+# KESTABILAN SISTEM
+android.allow_backup = True
+android.skip_update_buildozer = False
+p4a.branch = master
