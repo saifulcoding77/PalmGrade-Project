@@ -7,7 +7,7 @@ source.include_exts = py,png,jpg,kv,atlas,json
 version = 0.1
 
 # REQUIREMENTS: Guna versi yang paling asas & stabil sahaja
-requirements = python3,kivy==2.2.1,android,pyjnius,openssl,requests,urllib3,certifi
+requirements = python3,hostpython3,kivy==2.2.1,android,pyjnius,openssl,requests,urllib3,certifi
 
 orientation = portrait
 fullscreen = 0
@@ -32,5 +32,6 @@ p4a.branch = master
 # (8) Log & Debug
 log_level = 2
 warn_on_root = 1
+
 
 
