@@ -4,7 +4,6 @@
 title = PalmGrade AI
 package.name = palmgrade
 package.domain = org.manager.sawit
-# TAMBAHKAN BARISAN INI:
 version = 0.1
 
 source.dir = .
@@ -39,4 +38,5 @@ android.meta_data = com.google.android.gms.version=@integer/google_play_services
 # (8) Log & Debug
 log_level = 2
 warn_on_root = 1
+
 
