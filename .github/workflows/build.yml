@@ -25,6 +25,7 @@ jobs:
           sudo apt install -y git zip unzip autoconf autotools-dev libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev build-essential python3-dev
           pip install --upgrade pip
           pip install --upgrade Cython==0.29.33 buildozer
+
       - name: Build Android APK
         run: |
           buildozer -v android debug
