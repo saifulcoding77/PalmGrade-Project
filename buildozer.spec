@@ -18,7 +18,7 @@ android.permissions = INTERNET, CAMERA, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_ST
 # SETTING VIVO V21 (64-bit)
 android.api = 33
 android.minapi = 21
-android.sdk = 33
+# android.sdk = 33
 android.ndk = 25b
 android.archs = arm64-v8a
 
@@ -32,6 +32,7 @@ p4a.branch = master
 # (8) Log & Debug
 log_level = 2
 warn_on_root = 1
+
 
 
 
