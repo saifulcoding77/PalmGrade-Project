@@ -13,7 +13,7 @@ orientation = portrait
 fullscreen = 0
 
 # PERMISSIONS
-android.permissions = CAMERA
+android.permissions = CAMERA, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE
 
 # SETTING VIVO V21 (64-bit)
 android.api = 33
@@ -25,4 +25,5 @@ android.archs = arm64-v8a
 android.allow_backup = True
 android.skip_update_buildozer = False
 p4a.branch = master
+
 
