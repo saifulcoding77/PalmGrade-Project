@@ -1,40 +1,45 @@
 name: Build APK
-on: [push, workflow_dispatch]
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-      - name: Setup Java 17
-        uses: actions/setup-java@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          python-version: '3.11'
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Install System Dependencies
+      - name: Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y git zip unzip autoconf autotools-dev libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev build-essential python3-dev
+          sudo apt install -y git zip unzip colormake build-essential python3-dev libffi-dev libssl-dev
+          sudo apt install -y autoconf automake libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libgmp-dev libmpc-dev
           pip install --upgrade pip
-          pip install --upgrade Cython==0.29.33 buildozer
+          pip install buildozer cython==0.29.33 setuptools
 
-      - name: Build Android APK
+      - name: Accept Android SDK Licenses
         run: |
-          buildozer -v android debug
-        env:
-          APP_ANDROID_ACCEPT_SDK_LICENSE: "1"
-          CI: "true"
+          # Arahan ini akan menjawab 'y' (yes) kepada semua terma Android SDK secara automatik
+          mkdir -p ~/.android
+          touch ~/.android/repositories.cfg
+          yes | sdkmanager --licenses || true
 
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
+      - name: Build with Buildozer
+        run: |
+          # Tambah 'yes |' sekali lagi di sini sebagai langkah keselamatan
+          yes | buildozer android debug
+        continue-on-error: false
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
         with:
-          name: PalmGrade-APK-Result
+          name: PalmGrade-AI-Debug
           path: bin/*.apk
