@@ -3,56 +3,83 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.camera import Camera
 from kivy.uix.label import Label
 from kivy.clock import Clock
+from kivy.graphics.rotate import Rotate
+from kivy.graphics.context_instructions import PushMatrix, PopMatrix
 
 class PalmGradeApp(App):
     def build(self):
         self.layout = BoxLayout(orientation='vertical')
         
-        # 1. Label Keputusan
+        # 1. Header Keputusan
         self.result_label = Label(
-            text="PalmGrade AI (Safe Mode)\nMenunggu Analisis...",
-            size_hint_y=0.2,
-            font_size='20sp',
-            halign='center'
+            text="PALMGRADE AI: READY",
+            size_hint_y=0.15,
+            font_size='28sp',
+            bold=True
         )
         self.layout.add_widget(self.result_label)
         
-        # 2. Kamera Kivy Asas (Sangat Stabil)
-        self.cam = Camera(play=True, resolution=(640, 480), index=0)
+        # 2. Kamera dengan Pusingan Grafik (Fix 90 Degree)
+        self.cam = Camera(
+            play=True, 
+            resolution=(640, 480), 
+            index=0, 
+            allow_stretch=True, 
+            keep_ratio=False
+        )
+        
+        # Logik memusingkan paparan kamera ke Portrait
+        with self.cam.canvas.before:
+            PushMatrix()
+            # Kita pusing -90 darjah (atau 270) untuk betulkan orientasi Vivo
+            self.rot = Rotate(angle=-90, origin=self.cam.center)
+        with self.cam.canvas.after:
+            PopMatrix()
+
+        # Pastikan pusat pusingan sentiasa di tengah walaupun skrin berubah saiz
+        self.cam.bind(pos=self.update_rotate, size=self.update_rotate)
+        
         self.layout.add_widget(self.cam)
         
-        # Analisis warna setiap 1 saat
-        Clock.schedule_interval(self.analyze_color, 1.0)
+        # 3. Footer Sensor
+        self.sensor_label = Label(text="R: 0 | G: 0", size_hint_y=0.1)
+        self.layout.add_widget(self.sensor_label)
         
+        Clock.schedule_interval(self.analyze_palm, 0.5)
         return self.layout
 
-    def analyze_color(self, dt):
+    def update_rotate(self, instance, value):
+        self.rot.origin = self.cam.center
+
+    def analyze_palm(self, dt):
         if not self.cam.texture:
             return
-
         try:
-            # Ambil warna dari satu titik di tengah-tengah skrin (Center Pixel)
-            # Ini tidak membebankan memori seperti OpenCV
-            texture = self.cam.texture
-            center_x, center_y = int(texture.width / 2), int(texture.height / 2)
-            pixel_data = texture.get_region(center_x, center_y, 1, 1).pixels
+            tex = self.cam.texture
+            w, h = tex.width, tex.height
+            # Ambil sampel kecil di tengah
+            region = tex.get_region(int(w/2)-10, int(h/2)-10, 20, 20)
+            pixels = region.pixels
             
-            # Ambil nilai RGB (Red, Green, Blue)
-            r, g, b, a = pixel_data[0], pixel_data[1], pixel_data[2], pixel_data[3]
+            r_vals = [pixels[i] for i in range(0, len(pixels), 4)]
+            g_vals = [pixels[i+1] for i in range(0, len(pixels), 4)]
             
-            # --- LOGIK GRED SAWIT BERASASKAN RGB ---
-            # Jika merah/oren tinggi, ia adalah buah masak
-            if r > 150 and g < 100:
-                self.result_label.text = f"GRED: MASAK\n(R:{r} G:{g} B:{b})"
-                self.result_label.color = (0, 1, 0, 1) # Hijau
-            elif r > 100 and g > 80:
-                self.result_label.text = f"GRED: MENGKAL\n(R:{r} G:{g} B:{b})"
-                self.result_label.color = (1, 1, 0, 1) # Kuning
+            avg_r = sum(r_vals) / len(r_vals)
+            avg_g = sum(g_vals) / len(g_vals)
+            
+            # Logik Auto-Tuning Ratio
+            if avg_r > (avg_g * 1.35) and avg_r > 90:
+                self.result_label.text = "GRED: MASAK (LULUS)"
+                self.result_label.color = (0.2, 1, 0.2, 1)
+            elif avg_r > (avg_g * 1.1) and avg_r > 70:
+                self.result_label.text = "GRED: MENGKAL"
+                self.result_label.color = (1, 1, 0, 1)
             else:
-                self.result_label.text = f"GRED: MUDA / HITAM\n(R:{r} G:{g} B:{b})"
-                self.result_label.color = (1, 0, 0, 1) # Merah
+                self.result_label.text = "GRED: MUDA / HITAM"
+                self.result_label.color = (1, 0.2, 0.2, 1)
                 
-        except Exception as e:
+            self.sensor_label.text = f"Analisis Visual - R: {int(avg_r)} | G: {int(avg_g)}"
+        except:
             pass
 
 if __name__ == '__main__':
