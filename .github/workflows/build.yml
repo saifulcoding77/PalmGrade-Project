@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4 # Kemas kini ke v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5 # Kemas kini ke v5
         with:
           python-version: '3.11'
 
@@ -25,21 +25,14 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython==0.29.33 setuptools
 
-      - name: Accept Android SDK Licenses
-        run: |
-          # Arahan ini akan menjawab 'y' (yes) kepada semua terma Android SDK secara automatik
-          mkdir -p ~/.android
-          touch ~/.android/repositories.cfg
-          yes | sdkmanager --licenses || true
-
       - name: Build with Buildozer
         run: |
-          # Tambah 'yes |' sekali lagi di sini sebagai langkah keselamatan
+          # Menggunakan 'yes' untuk menerima semua lesen Android secara automatik semasa proses build
           yes | buildozer android debug
         continue-on-error: false
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4 # KEMAS KINI KE V4 (WAJIB)
         with:
-          name: PalmGrade-AI-Debug
+          name: PalmGrade-AI-${{ github.run_number }} # Nama unik menggunakan nombor larian
           path: bin/*.apk
