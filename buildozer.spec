@@ -25,3 +25,4 @@ android.archs = arm64-v8a
 android.allow_backup = True
 android.skip_update_buildozer = False
 p4a.branch = master
+
