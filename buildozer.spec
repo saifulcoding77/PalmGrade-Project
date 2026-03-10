@@ -22,5 +22,6 @@ android.ndk = 25b
 android.archs = arm64-v8a
 
 # KESTABILAN SISTEM
-p4a.branch = stable
+p4a.branch = master
 log_level = 2
+
