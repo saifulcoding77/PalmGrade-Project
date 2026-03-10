@@ -6,24 +6,19 @@ from kivy.clock import Clock
 class PalmGradeLayout(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        # Jangan letak Camera(play=True) terus di sini.
-        # Kita tunggu 1 saat selepas aplikasi dibuka.
+        # Tunggu 1 saat supaya UI siap dibina sebelum buka kamera
         Clock.schedule_once(self.start_camera, 1)
 
     def start_camera(self, dt):
         try:
-            self.camera = Camera(play=True, resolution=(640, 480))
+            # Gunakan resolusi -1 untuk kestabilan Android
+            self.camera = Camera(play=True, resolution=(-1, -1))
             self.ids.camera_container.add_widget(self.camera)
-            Clock.schedule_interval(self.analisis_buah, 0.5)
         except Exception as e:
-            print(f"Ralat Kamera: {e}")
-
-    def analisis_buah(self, dt):
-        # Logik pengesanan anda di sini
-        pass
+            self.ids.status_label.text = f"Error: {str(e)}"
 
     def simpan_data(self):
-        print("Data tersimpan!")
+        self.ids.status_label.text = "DATA DISIMPAN!"
 
 class PalmGradeApp(App):
     def build(self):
