@@ -1,0 +1,61 @@
+<PalmGradeLayout>:
+    orientation: 'vertical'
+    spacing: dp(10)
+    padding: dp(15)
+    canvas.before:
+        Color:
+            rgba: 0.1, 0.1, 0.1, 1  # Latar belakang gelap supaya warna buah menonjol
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    # --- STATUS BAR ---
+    Label:
+        id: status_label
+        text: "MENCARI BUAH..."
+        size_hint_y: 0.15
+        font_size: '28sp'
+        bold: True
+        markup: True
+        canvas.before:
+            Color:
+                rgba: 0.2, 0.2, 0.2, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [0, 0, 20, 20]
+
+    # --- VIEWPORT KAMERA ---
+    BoxLayout:
+        id: camera_container
+        size_hint_y: 0.65
+        canvas.before:
+            PushMatrix
+            Rotate:
+                angle: -90
+                origin: self.center
+        canvas.after:
+            PopMatrix
+
+    # --- PANEL BUTANG (MESRA OPERATOR) ---
+    BoxLayout:
+        size_hint_y: 0.2
+        spacing: dp(10)
+
+        Button:
+            id: btn_sah
+            text: "SAHKAN MASAK"
+            font_size: '26sp'
+            bold: True
+            background_normal: ''
+            background_color: (0, 0.7, 0, 1)  # Hijau Pekat
+            on_press: root.simpan_data()
+            disabled: True
+
+        Button:
+            text: "RESET"
+            size_hint_x: 0.3
+            font_size: '18sp'
+            background_normal: ''
+            background_color: (0.7, 0, 0, 1)  # Merah
+            on_press: root.reset_kiraan()
