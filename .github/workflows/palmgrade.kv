@@ -1,61 +1,38 @@
 <PalmGradeLayout>:
     orientation: 'vertical'
-    spacing: dp(10)
-    padding: dp(15)
     canvas.before:
         Color:
-            rgba: 0.1, 0.1, 0.1, 1  # Latar belakang gelap supaya warna buah menonjol
+            rgba: 0.1, 0.1, 0.1, 1
         Rectangle:
             pos: self.pos
             size: self.size
 
-    # --- STATUS BAR ---
+    # Status Bar
     Label:
         id: status_label
         text: "MENCARI BUAH..."
-        size_hint_y: 0.15
-        font_size: '28sp'
+        size_hint_y: 0.1
+        font_size: '24sp'
         bold: True
-        markup: True
-        canvas.before:
-            Color:
-                rgba: 0.2, 0.2, 0.2, 1
-            RoundedRectangle:
-                pos: self.pos
-                size: self.size
-                radius: [0, 0, 20, 20]
 
-    # --- VIEWPORT KAMERA ---
+    # Viewport Kamera
     BoxLayout:
         id: camera_container
-        size_hint_y: 0.65
+        size_hint_y: 0.7
+        # Kita pusingkan Layout ini, bukan widget kamera secara langsung
         canvas.before:
             PushMatrix
             Rotate:
                 angle: -90
-                origin: self.center
+                # Menggunakan self.center_x dan self.center_y lebih stabil
+                origin: self.center_x, self.center_y
         canvas.after:
             PopMatrix
 
-    # --- PANEL BUTANG (MESRA OPERATOR) ---
-    BoxLayout:
+    # Butang
+    Button:
+        id: btn_sah
+        text: "SAHKAN MASAK"
         size_hint_y: 0.2
-        spacing: dp(10)
-
-        Button:
-            id: btn_sah
-            text: "SAHKAN MASAK"
-            font_size: '26sp'
-            bold: True
-            background_normal: ''
-            background_color: (0, 0.7, 0, 1)  # Hijau Pekat
-            on_press: root.simpan_data()
-            disabled: True
-
-        Button:
-            text: "RESET"
-            size_hint_x: 0.3
-            font_size: '18sp'
-            background_normal: ''
-            background_color: (0.7, 0, 0, 1)  # Merah
-            on_press: root.reset_kiraan()
+        font_size: '30sp'
+        on_press: root.simpan_data()
