@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04 # Gunakan versi OS yang spesifik untuk kestabilan
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v4
@@ -33,19 +33,13 @@ jobs:
 
       - name: Build with Buildozer
         run: |
-          # Langkah 1: Bersihkan cache lama yang mungkin rosak
-          buildozer android clean
+          # Langkah 1: Buang sisa binaan lama yang rosak
+          rm -rf .buildozer/
           
-          # Langkah 2: Berikan kebenaran penuh kepada folder kerja
-          chmod -R 777 .
-          
-          # Langkah 3: Jalankan binaan dengan log terperinci
-          yes | buildozer -v android debug
+          # Langkah 2: Jalankan build dengan log tahap 2 (debug)
+          # Kita tidak gunakan 'yes |' di depan supaya kita boleh nampak ralat sebenar
+          buildozer -v android debug
         env:
           JAVA_HOME: ${{ env.JAVA_HOME_17_X64 }}
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: PalmGrade-AI-${{ github.run_number }}
-          path: bin/*.apk
+          # Paksa sistem gunakan NDK yang dimuat turun oleh Buildozer sendiri
+          ANDROID_NDK_HOME: ""
