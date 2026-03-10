@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    timeout-minutes: 45
 
     steps:
       - uses: actions/checkout@v4
@@ -33,16 +34,14 @@ jobs:
 
       - name: Build with Buildozer
         run: |
-          # Padam folder lama untuk pastikan p4a master yang baru dimuat turun   
           rm -rf .buildozer/
-          # Jalankan build dengan log tahap 2 (debug) supaya kita nampak apa yang berlaku
-          # Gunakan 'batch mode' supaya ia tidak menunggu input user
-         batch mode  buildozer -v android debug
+          # Menggunakan 'yes |' untuk elak proses menunggu input
+          yes | buildozer -v android debug
         env:
           JAVA_HOME: ${{ env.JAVA_HOME_17_X64 }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: PalmGrade-AI-${{ github.run_number }}
+          name: PalmGrade-AI
           path: bin/*.apk
