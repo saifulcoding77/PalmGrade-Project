@@ -1,13 +1,8 @@
 <PalmGradeLayout>:
     orientation: 'vertical'
-    canvas.before:
-        Color:
-            rgba: 0.1, 0.1, 0.1, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
+    spacing: dp(10)
+    padding: dp(10)
 
-    # Status Bar
     Label:
         id: status_label
         text: "MENCARI BUAH..."
@@ -15,24 +10,22 @@
         font_size: '24sp'
         bold: True
 
-    # Viewport Kamera
     BoxLayout:
         id: camera_container
         size_hint_y: 0.7
-        # Kita pusingkan Layout ini, bukan widget kamera secara langsung
+        # Pusingkan layout supaya kamera tegak di Vivo V21
         canvas.before:
             PushMatrix
             Rotate:
                 angle: -90
-                # Menggunakan self.center_x dan self.center_y lebih stabil
-                origin: self.center_x, self.center_y
+                origin: self.center
         canvas.after:
             PopMatrix
 
-    # Butang
     Button:
         id: btn_sah
         text: "SAHKAN MASAK"
         size_hint_y: 0.2
         font_size: '30sp'
+        background_color: (0, 1, 0, 1)
         on_press: root.simpan_data()
