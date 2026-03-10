@@ -29,13 +29,19 @@ jobs:
           sudo apt install -y git zip unzip colormake build-essential python3-dev libffi-dev libssl-dev
           sudo apt install -y autoconf automake libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libgmp-dev libmpc-dev
           pip install --upgrade pip
-          pip install buildozer cython==0.29.33 setuptools
+          pip install buildozer "cython<3.0.0" setuptools
 
       - name: Build with Buildozer
         run: |
-          # Padam folder lama untuk elak FileNotFoundError
+          # Padam folder lama untuk pastikan p4a master yang baru dimuat turun
           rm -rf .buildozer/
-          # Jalankan binaan dengan 'yes' untuk terima semua lesen secara automatik
+          # Gunakan 'yes |' untuk terima semua lesen secara automatik
           yes | buildozer -v android debug
         env:
           JAVA_HOME: ${{ env.JAVA_HOME_17_X64 }}
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: PalmGrade-AI-${{ github.run_number }}
+          path: bin/*.apk
