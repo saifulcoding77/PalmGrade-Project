@@ -16,9 +16,6 @@ fullscreen = 0
 android.permissions = INTERNET, CAMERA, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE, ACCESS_NETWORK_STATE
 
 # SETTING VIVO V21 (64-bit)
-android.ndk_path = 
-android.sdk_path = 
-android.ant_path =
 android.api = 33
 android.minapi = 21
 android.ndk = 25b
@@ -37,6 +34,7 @@ android.skip_update_buildozer = False
 # (8) Log & Debug
 log_level = 2
 warn_on_root = 1
+
 
 
 
