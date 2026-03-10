@@ -34,9 +34,11 @@ jobs:
       - name: Build with Buildozer
         run: |
           # Padam folder lama untuk pastikan p4a master yang baru dimuat turun
+          
           rm -rf .buildozer/
-          # Gunakan 'yes |' untuk terima semua lesen secara automatik
-          yes | buildozer -v android debug
+          # Jalankan build dengan log tahap 2 (debug) supaya kita nampak apa yang berlaku
+          # Gunakan 'batch mode' supaya ia tidak menunggu input user
+          buildozer -v android debug
         env:
           JAVA_HOME: ${{ env.JAVA_HOME_17_X64 }}
 
